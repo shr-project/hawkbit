@@ -18,7 +18,7 @@ services:
     networks:
     - hawknet
     ports:
-    - "8080:8080"
+    - "80:80"
     deploy:
       restart_policy:
         condition: on-failure
@@ -28,6 +28,14 @@ services:
     - 'SPRING_RABBITMQ_HOST=rabbitmq'
     - 'SPRING_RABBITMQ_USERNAME=guest'
     - 'SPRING_RABBITMQ_PASSWORD=guest'
+    entrypoint:
+    - "java"
+    - "-Dserver.port=80"
+    - "-Dhawkbit.artifact.url.protocols.download-http.port=80"
+    - "-jar"
+    - "hawkbit-update-server.jar"
+    - "--spring.profiles.active=mysql"
+    - "-Xms768m -Xmx768m -XX:MaxMetaspaceSize=250m -XX:MetaspaceSize=250m -Xss300K -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+HeapDumpOnOutOfMemoryError"
     volumes:
     - artifactrepo-vol:/opt/hawkbit/artifactrepo
 
